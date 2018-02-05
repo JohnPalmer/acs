@@ -34,4 +34,4 @@ vignettes/*.pdf
 .Rproj.user
 
 # untracked data
-data/untracked/*
+untracked_data/*
