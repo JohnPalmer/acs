@@ -1,0 +1,31 @@
+GEO.id,Id
+GEO.id2,Id2
+GEO.display-label,Geography
+HD01_VD01,Estimate; Total:
+HD02_VD01,Margin of Error; Total:
+HD01_VD02,Estimate; Europe:
+HD02_VD02,Margin of Error; Europe:
+HD01_VD28,Estimate; Europe: - Eastern Europe:
+HD02_VD28,Margin of Error; Europe: - Eastern Europe:
+HD01_VD31,Estimate; Europe: - Eastern Europe: - Bulgaria
+HD02_VD31,Margin of Error; Europe: - Eastern Europe: - Bulgaria
+HD01_VD32,Estimate; Europe: - Eastern Europe: - Croatia
+HD02_VD32,Margin of Error; Europe: - Eastern Europe: - Croatia
+HD01_VD34,Estimate; Europe: - Eastern Europe: - Hungary
+HD02_VD34,Margin of Error; Europe: - Eastern Europe: - Hungary
+HD01_VD35,Estimate; Europe: - Eastern Europe: - Latvia
+HD02_VD35,Margin of Error; Europe: - Eastern Europe: - Latvia
+HD01_VD36,Estimate; Europe: - Eastern Europe: - Lithuania
+HD02_VD36,Margin of Error; Europe: - Eastern Europe: - Lithuania
+HD01_VD37,Estimate; Europe: - Eastern Europe: - Macedonia
+HD02_VD37,Margin of Error; Europe: - Eastern Europe: - Macedonia
+HD01_VD38,Estimate; Europe: - Eastern Europe: - Moldova
+HD02_VD38,Margin of Error; Europe: - Eastern Europe: - Moldova
+HD01_VD39,Estimate; Europe: - Eastern Europe: - Poland
+HD02_VD39,Margin of Error; Europe: - Eastern Europe: - Poland
+HD01_VD40,Estimate; Europe: - Eastern Europe: - Romania
+HD02_VD40,Margin of Error; Europe: - Eastern Europe: - Romania
+HD01_VD41,Estimate; Europe: - Eastern Europe: - Russia
+HD02_VD41,Margin of Error; Europe: - Eastern Europe: - Russia
+HD01_VD43,Estimate; Europe: - Eastern Europe: - Bosnia and Herzegovina
+HD02_VD43,Margin of Error; Europe: - Eastern Europe: - Bosnia and Herzegovina
