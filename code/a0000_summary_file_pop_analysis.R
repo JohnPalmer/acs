@@ -4,6 +4,8 @@ library(data.table)
 E2016 = fread("~/research/acs/untracked_data/2012-2016/All_Geog_Not_TBG/e20165us0010000.txt")
 M2016 = fread("~/research/acs/untracked_data/2012-2016/All_Geog_Not_TBG/m20165us0010000.txt")
 
+G2016 = fread("~/research/acs/data/ACS_2016_geography_files/US.csv")
+
 (bosnians_US_2016_est = E2016[[1, 49]])
 (bosnians_US_2016_me = M2016[[1, 49]])
 
