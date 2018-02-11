@@ -1,6 +1,7 @@
 ## Data prep done on server with 60 GB of RAM ##
 
 library(data.table)
+library(Hmisc)
 
 ### 2005-2009
 
@@ -13,6 +14,29 @@ Dh = rbindlist(lapply(chunks_suffixes, function(s) fread(paste0("~/research/acs/
 D_bos = D[POBP=="150"]
 
 saveRDS(D_bos, file="~/research/acs/data/ss09pus_POBP_bos.Rds")
+
+D[, PINCP_ADJ := PINCP*.000001*ADJINC]
+
+
+D[POBP=="150", wtd.mean(PINCP_ADJ, weights=PWGTP, na.rm=TRUE)]
+
+
+D[, wtd.mean(PINCP_ADJ, weights=PWGTP, na.rm=TRUE), by=list(NATIVITY,POBP)]
+D[POBP=="150", wtd.quantile(PINCP_ADJ, weights=PWGTP, na.rm=TRUE)]
+D[NATIVITY==1, wtd.quantile(PINCP_ADJ, weights=PWGTP, na.rm=TRUE)]
+
+D[POBP=="150", wtd.mean(ESR==3, weights=PWGTP, na.rm=TRUE)]
+D[NATIVITY==1,wtd.mean(ESR==3, weights=PWGTP, na.rm=TRUE)]
+
+
+
+D[,PINCP_r=replace(PINCP, PINCP == "bbbbbbb", NA), ADJINC_r=ADJINC*.000001, PINCP_ADJ_r = PINCP_r * ADJINC_r, ref_year=case_when(ADJINC==1119794~2005, ADJINC==1080505~2006, ADJINC==1051849~2007, ADJINC==1014521~2008, ADJINC==999480~ 2009), nat=CIT==4, LANX_r=factor(LANX), ENG_r=factor(ENG), FER_yes=FER==2, SEX_female=SEX==2, YOEP_r=replace(YOEP, YOEP=="bbbb", NA), yse=ref_year-YOEP_r
+
+D[POBP=="150", mean()]
+
+
+
+
 
 (bos_pop_est = D_bos[, sum(PWGTP)])
 
