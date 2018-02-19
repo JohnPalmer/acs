@@ -6,25 +6,22 @@ p2p = read_csv("~/research/acs/data/puma2puma.csv", skip=1)
 names(p2p) = names(read_csv("~/research/acs/data/puma2puma.csv"))
 p2p = p2p %>% mutate(stint = as.integer(state), puma12int = as.integer(puma12), puma2kint = as.integer(puma2k))
 
-p2co = read_csv("~/research/acs/data/puma2county.csv", skip=1) 
-names(p2co) = names(read_csv("~/research/acs/data/puma2county.csv"))
-p2co = p2co %>% mutate(stint = as.integer(state), puma2kint = as.integer(puma2k))
+p2010_2_cbsa2010 = read_csv("~/research/acs/data/puma2010_2_cbsa2010.csv", skip=1) 
+names(p2010_2_cbsa2010) = names(read_csv("~/research/acs/data/puma2010_2_cbsa2010.csv"))
+p2010_2_cbsa2010 = p2010_2_cbsa2010 %>% mutate(stint = as.integer(state), puma2kint = as.integer(puma2k)) %>% filter(cbsa10 != 99999)
 
-p12_2_co = read_csv("~/research/acs/data/puma12_2_county.csv", skip=1) 
-names(p12_2_co) = names(read_csv("~/research/acs/data/puma12_2_county.csv"))
-p12_2_co = p12_2_co %>% mutate(stint = as.integer(state), puma12int = as.integer(puma12))
+D = as.tibble(readRDS(file="~/research/acs/data/ss09pus_POBP_bos.Rds")) %>% mutate(PINCP_r=replace(PINCP, PINCP == "bbbbbbb", NA), ADJINC_r=ADJINC*.000001, PINCP_ADJ_r = PINCP_r * ADJINC_r, ref_year=case_when(ADJINC==1119794~2005, ADJINC==1080505~2006, ADJINC==1051849~2007, ADJINC==1014521~2008, ADJINC==999480~ 2009), nat=CIT==4, LANX_r=factor(LANX), ENG_r=factor(ENG), FER_yes=FER==2, SEX_female=SEX==2, YOEP_r=replace(YOEP, YOEP=="bbbb", NA), yse=ref_year-YOEP_r, entry_period=case_when(YOEP<1992~"pre_war", YOEP %in% 1992:1995~"war", YOEP %in% 1996:1999~"immediate_post_war", YOEP>1999~"post_war"), working_age=AGEP%in%15:64, working_age_income=if_else(working_age, PINCP_ADJ_r, NULL)) # %>% left_join(select(p2010_2_cbsa2010, stint, puma2kint, cbsa10, cbsaname10), by=c("ST"="stint", "PUMA"="puma2kint")) %>% left_join(select(p2010_2_cbsa2010, stint, puma2kint, mig_cbsa=cbsa10, mig_cbsa_name=cbsaname10), by=c("MIGSP"="stint", "MIGPUMA"="puma2kint"))
 
+moves_from = D %>% filter(MIG==3) %>% group_by(MIGSP, MIGPUMA) %>% select(PWGTP) %>% summarise(N=sum(PWGTP), n=n()) %>% arrange(desc(N))
 
-D = as.tibble(readRDS(file="~/research/acs/data/ss09pus_POBP_bos.Rds")) %>% mutate(PINCP_r=replace(PINCP, PINCP == "bbbbbbb", NA), ADJINC_r=ADJINC*.000001, PINCP_ADJ_r = PINCP_r * ADJINC_r, ref_year=case_when(ADJINC==1119794~2005, ADJINC==1080505~2006, ADJINC==1051849~2007, ADJINC==1014521~2008, ADJINC==999480~ 2009), nat=CIT==4, LANX_r=factor(LANX), ENG_r=factor(ENG), FER_yes=FER==2, SEX_female=SEX==2, YOEP_r=replace(YOEP, YOEP=="bbbb", NA), yse=ref_year-YOEP_r, entry_period=case_when(YOEP<1992~"pre_war", YOEP %in% 1992:1995~"war", YOEP %in% 1996:1999~"immediate_post_war", YOEP>1999~"post_war"), working_age=AGEP%in%15:64, working_age_income=if_else(working_age, PINCP_ADJ_r, NULL)) %>% left_join(p2co, by=c("ST"="stint", "PUMA"="puma2kint")) %>% mutate(county_r = if_else(county%in%c("29189", "29510"),"stlouis", county), cntyname_r=if_else(county%in%c("29189", "29510"),"St. Louis County & City, Missouri", cntyname)) %>% left_join(select(p2co, stint, puma2kint, mig_county=county, mig_cntyname=cntyname), by=c("MIGSP"="stint", "MIGPUMA"="puma2kint"))
-
-county_movers = D %>% filter(MIG==3) %>% group_by(MIGSP, mig_county, mig_cntyname, ST, county, cntyname) %>% select(PWGTP) %>% summarise(N=sum(PWGTP), n=n()) %>% arrange(desc(N)) %>% filter(!is.na(mig_county) & mig_county != county)
+moves_to = D %>% filter(MIG==3) %>% group_by(ST, PUMA) %>% select(PWGTP) %>% summarise(N=sum(PWGTP), n=n()) %>% arrange(desc(N))
 
 
+D16 = as.tibble(readRDS(file="~/research/acs/data/ss16pus_POBP_bos.Rds")) %>% mutate(PINCP_r=replace(PINCP, PINCP == "bbbbbbb", NA), ADJINC_r=ADJINC*.000001, PINCP_ADJ_r = PINCP_r * ADJINC_r, ref_year=case_when(ADJINC==1119794~2005, ADJINC==1080505~2006, ADJINC==1051849~2007, ADJINC==1014521~2008, ADJINC==999480~ 2009), nat=CIT==4, LANX_r=factor(LANX), ENG_r=factor(ENG), FER_yes=FER==2, SEX_female=SEX==2, YOEP_r=replace(YOEP, YOEP=="bbbb", NA), yse=ref_year-YOEP_r, entry_period=case_when(YOEP<1992~"pre_war", YOEP %in% 1992:1995~"war", YOEP %in% 1996:1999~"immediate_post_war", YOEP>1999~"post_war"), working_age=AGEP%in%15:64, working_age_income=if_else(working_age, PINCP_ADJ_r, NULL)) 
 
+moves_from16 = D16 %>% filter(MIG==3) %>% group_by(MIGSP, MIGPUMA) %>% select(PWGTP) %>% summarise(N=sum(PWGTP), n=n()) %>% arrange(desc(N))
 
-D16 = as.tibble(readRDS(file="~/research/acs/data/ss16pus_POBP_bos.Rds")) %>% mutate(PINCP_r=replace(PINCP, PINCP == "bbbbbbb", NA), ADJINC_r=ADJINC*.000001, PINCP_ADJ_r = PINCP_r * ADJINC_r, ref_year=case_when(ADJINC==1119794~2005, ADJINC==1080505~2006, ADJINC==1051849~2007, ADJINC==1014521~2008, ADJINC==999480~ 2009), nat=CIT==4, LANX_r=factor(LANX), ENG_r=factor(ENG), FER_yes=FER==2, SEX_female=SEX==2, YOEP_r=replace(YOEP, YOEP=="bbbb", NA), yse=ref_year-YOEP_r, entry_period=case_when(YOEP<1992~"pre_war", YOEP %in% 1992:1995~"war", YOEP %in% 1996:1999~"immediate_post_war", YOEP>1999~"post_war"), working_age=AGEP%in%15:64, working_age_income=if_else(working_age, PINCP_ADJ_r, NULL)) %>% left_join(p2p, by=c("ST"="stint", "PUMA"="puma12int")) %>% left_join(select(p12_2_co, stint, puma12int, county, cntyname), by=c("ST"="stint", "PUMA"="puma12int")) %>% mutate(county_r = if_else(county%in%c("29189", "29510"),"stlouis", county), cntyname_r=if_else(county%in%c("29189", "29510"),"St. Louis County & City, Missouri", cntyname)) %>% left_join(select(p12_2_co, stint, puma12int, mig_county=county, mig_cntyname=cntyname), by=c("MIGSP"="stint", "MIGPUMA"="puma12int"))
-
-county_movers16 = D16 %>% filter(MIG==3) %>% group_by(MIGSP, mig_county, mig_cntyname, ST, county, cntyname) %>% select(PWGTP) %>% summarise(N=sum(PWGTP)) %>% arrange(desc(N)) %>% filter(!is.na(mig_county) & mig_county != county)
+moves_to16 = D16 %>% filter(MIG==3) %>% group_by(ST, PUMA) %>% select(PWGTP) %>% summarise(N=sum(PWGTP), n=n()) %>% arrange(desc(N))
 
 
 
