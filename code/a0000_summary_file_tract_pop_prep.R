@@ -47,5 +47,5 @@ E2016 = merge(E2016, M2016_inc, all.x=TRUE, all.y=FALSE)
 E2016[,  STUSAB:=toupper(STUSAB)]
 E2016 = merge(E2016, G2016)
 
-saveRDS(E2016, file="~/research/acs/data/summary_file_tracts_bosnians_median_income.Rds")
+saveRDS(E2016, file="~/research/acs/data/summary_file_tracts_bosnians_median_income_2016.Rds")
 
