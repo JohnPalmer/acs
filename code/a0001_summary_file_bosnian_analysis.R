@@ -23,3 +23,5 @@ D = E2009 %>% full_join(select(E2016, CBSA, N_B_2016=BOSCOUNT, MoE_B_2016=MoE_B,
   arrange(desc(N_B_2009))
 
 D %>% filter(sig_diff_B) %>% select(Name, N_B_2009, N_B_2016, diff_B, diff_FB, sig_diff_FB, diff_T, sig_diff_T) %>% arrange(diff_B)
+
+saveRDS(D, file="~/research/acs/data/cbsa_bosnian_counts.Rds")
