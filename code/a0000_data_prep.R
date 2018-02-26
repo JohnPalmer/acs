@@ -1,5 +1,5 @@
 ## Data prep done on server with 60 GB of RAM ##
-
+rm(list=ls())
 library(data.table)
 library(Hmisc)
 
@@ -15,56 +15,9 @@ D_bos = D[POBP=="150"]
 
 saveRDS(D_bos, file="~/research/acs/data/ss09pus_POBP_bos.Rds")
 
-D[, PINCP_ADJ := PINCP*.000001*ADJINC]
+Dh_bos = Dh[serialno %in% D_bos$serialno]
 
-
-D[POBP=="150", wtd.mean(PINCP_ADJ, weights=PWGTP, na.rm=TRUE)]
-
-
-D[, wtd.mean(PINCP_ADJ, weights=PWGTP, na.rm=TRUE), by=list(NATIVITY,POBP)]
-D[POBP=="150", wtd.quantile(PINCP_ADJ, weights=PWGTP, na.rm=TRUE)]
-D[NATIVITY==1, wtd.quantile(PINCP_ADJ, weights=PWGTP, na.rm=TRUE)]
-
-D[POBP=="150", wtd.mean(ESR==3, weights=PWGTP, na.rm=TRUE)]
-D[NATIVITY==1,wtd.mean(ESR==3, weights=PWGTP, na.rm=TRUE)]
-
-
-
-D[,PINCP_r=replace(PINCP, PINCP == "bbbbbbb", NA), ADJINC_r=ADJINC*.000001, PINCP_ADJ_r = PINCP_r * ADJINC_r, ref_year=case_when(ADJINC==1119794~2005, ADJINC==1080505~2006, ADJINC==1051849~2007, ADJINC==1014521~2008, ADJINC==999480~ 2009), nat=CIT==4, LANX_r=factor(LANX), ENG_r=factor(ENG), FER_yes=FER==2, SEX_female=SEX==2, YOEP_r=replace(YOEP, YOEP=="bbbb", NA), yse=ref_year-YOEP_r
-
-D[POBP=="150", mean()]
-
-
-
-
-
-(bos_pop_est = D_bos[, sum(PWGTP)])
-
-bos_pop_se = sqrt(sum((D_bos[, sum(PWGTP)] - as.numeric(D_bos[,lapply(.SD, sum), .SDcols=(grep("PWGTP", names(D_bos)))][,2:80]))^2)*4/80)
-
-(bos_pop_ci95 = bos_pop_est + 1.96*bos_pop_se*c(-1,1))
-
-D_bos_origin = D[POBP=="150" | ANC1P=="177" | ANC2P=="177" | LANP=="1276"]
-
-(bos_pop_origin_est = D_bos_origin[, sum(PWGTP)])
-
-bos_pop_origin_se = sqrt(sum((D_bos_origin[, sum(PWGTP)] - as.numeric(D_bos_origin[,lapply(.SD, sum), .SDcols=(grep("PWGTP", names(D_bos_origin)))][,2:80]))^2)*4/80)
-
-(bos_pop_origin_ci95 = bos_pop_origin_est + 1.96*bos_pop_origin_se*c(-1,1))
-
-lang_yugo = as.character(c(1274:1278))
-anc_yugo = as.character(c(109, 130,131, 152, 154, 176, 177))
-pob_yugo = as.character(147, 150:154, 168)
-
-D_yugo_origin = D[POBP %in% pob_yugo | ANC1P %in% anc_yugo | ANC2P %in% anc_yugo | LANP %in% lang_yugo]
-
-(yugo_pop_origin_est = D_yugo_origin[, sum(PWGTP)])
-
-yugo_pop_origin_se = sqrt(sum((D_yugo_origin[, sum(PWGTP)] - as.numeric(D_yugo_origin[,lapply(.SD, sum), .SDcols=(grep("PWGTP", names(D_yugo_origin)))][,2:80]))^2)*4/80)
-
-(yugo_pop_origin_ci95 = yugo_pop_origin_est + 1.96*yugo_pop_origin_se*c(-1,1))
-
-
+saveRDS(Dh_bos, file="~/research/acs/data/ss09hus_POBP_bos.Rds")
 
 ### 2012-2016
 
@@ -77,6 +30,12 @@ Dh = rbindlist(lapply(chunks_suffixes, function(s) fread(paste0("~/research/acs/
 D_bos = D[POBP=="150"]
 
 saveRDS(D_bos, file="~/research/acs/data/ss16pus_POBP_bos.Rds")
+
+Dh_bos = Dh[SERIALNO %in% D_bos$SERIALNO]
+
+saveRDS(Dh_bos, file="~/research/acs/data/ss16hus_POBP_bos.Rds")
+
+
 
 (bos_pop_est = D_bos[, sum(PWGTP)])
 

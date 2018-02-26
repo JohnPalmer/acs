@@ -36,7 +36,7 @@ cbsa_track_dist %>% group_by(CBSA_Code, CBSA_Title) %>% summarise(sum(N_Bos, na.
 
 
 ggplot(cbsa_track_dist, aes(x=median_income_quant, y=N_Bos)) + geom_bar(stat="identity")  + facet_wrap(~CBSA_Title, ncol=2) + geom_errorbar(aes(ymin=if_else( (N_Bos-N_Bos_ME90)<0,0,(N_Bos-N_Bos_ME90)), ymax=N_Bos+N_Bos_ME90), width=.2) + ylab("Bosnia-born population") + xlab("Tract median income quantile")
-ggsave("figures/tract_quants_2009.pdf")
+ggsave("~/research/acs/figures/tract_quants_2009.pdf")
 
 
 # 2016
@@ -60,6 +60,7 @@ cbsa_track_dist_16 %>% group_by(cbsa, cbsaname15) %>% summarise(sum(N_Bos, na.rm
 
 
 ggplot(cbsa_track_dist_16, aes(x=median_income_quant, y=N_Bos)) + geom_bar(stat="identity")  + facet_wrap(~cbsaname15, ncol=2) + geom_errorbar(aes(ymin=if_else( (N_Bos-N_Bos_ME90)<0,0,(N_Bos-N_Bos_ME90)), ymax=N_Bos+N_Bos_ME90), width=.2) + ylab("Bosnia-born population") + xlab("Tract median income quantile")
+ggsave("~/research/acs/figures/tract_quants_2016.pdf")
 
 
 # counrtywide
